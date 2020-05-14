@@ -126,31 +126,6 @@ chartGroup.append("text")
 
     // CITED FROM https://stackoverflow.com/questions/55988709/how-can-i-add-labels-inside-the-points-in-a-scatterplot
 
-// Initialize tooltip
-    // Step 1: Append tooltip div
-    var toolTip = d3.select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .offset([80, -60])
-      .html(function(d) {
-        return  `${d.state}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}<br>`; 
-    })
-      .classed("tooltip", true);
-
-    // Step 2: Create "mouseover" event listener to display tooltip
-    circlesGroup.on("mouseover", function(data) {
-      toolTip.show(data, this);
-    })
-          
-      // Step 3: Create "mouseout" event listener to hide tooltip
-      .on("mouseout", function(data, index) {
-        toolTip.hide(data);
-      }).catch(function(error) {
-    console.log(error);
-  });
-};
-// CITED TOOLTIP FROM LESSON-PLANS 16-D3, ACTIVITIES 3 SOLVED (7)
-
 // When the browser loads, makeResponsive() is called.
 makeResponsive();
 
