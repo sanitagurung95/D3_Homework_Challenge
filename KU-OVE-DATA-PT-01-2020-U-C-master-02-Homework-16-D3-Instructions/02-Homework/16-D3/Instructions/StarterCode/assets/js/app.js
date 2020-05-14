@@ -3,23 +3,25 @@
 // that automatically resizes the chart
 function makeResponsive() {
 
-    // if the SVG area isn't empty when the browser loads, remove it
-    // and replace it with a resized version of the chart
-    var svgArea = d3.select("body").select("svg");
-    if (!svgArea.empty()) {
-      svgArea.remove();
-    }
+    // // if the SVG area isn't empty when the browser loads, remove it
+    // // and replace it with a resized version of the chart
+    // var svgArea = d3.select("body").select("svg");
+    // if (!svgArea.empty()) {
+    //   svgArea.remove();
+    // }
   
-    // SVG wrapper dimensions are determined by the current width
-    // and height of the browser window.
-    var svgWidth = window.innerWidth;
-    var svgHeight = window.innerHeight;
+    var svgHeight = 500;
+    var svgWidth = 1000;
+    // // SVG wrapper dimensions are determined by the current width
+    // // and height of the browser window.
+    // var svgWidth = window.innerWidth;
+    // var svgHeight = window.innerHeight;
   
-    var margin = {
+    var chartMargin = {
       top: 30,
       right: 50,
       bottom: 80,
-      left: 100
+      left: 50
     };
   
     var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
@@ -28,26 +30,28 @@ function makeResponsive() {
     console.log(chartWidth);
 
     // append svg and group
-    var svg = d3.select(".scatter")
+    var svg = d3.select("#scatter")
       .append("svg")
       .attr("height", svgHeight)
       .attr("width", svgWidth);
   
     var chartGroup = svg.append("g")
-        console.log(chartGroup)
 
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+      console.log(chartGroup)
+
       
     // Read CSV
       d3.csv("data.csv").then(function(data){
-          console.log(data);
+          // console.log(data);
 
          // create date parser
-    var dateParser = d3.timeParse("%d-%b");
+    // var dateParser = d3.timeParse("%d-%b");
 
         // parse data
           data.forEach(function(data) {
-              data.poverty = dateParser(data.poverty);
+              data.poverty = +data.poverty;
               data.healthcare = +data.healthcare;
               
           });
@@ -125,6 +129,7 @@ chartGroup.append("text")
     .text("In Poverty (%)"); 
 
     // CITED FROM https://stackoverflow.com/questions/55988709/how-can-i-add-labels-inside-the-points-in-a-scatterplot
+  };
 
 // When the browser loads, makeResponsive() is called.
 makeResponsive();
