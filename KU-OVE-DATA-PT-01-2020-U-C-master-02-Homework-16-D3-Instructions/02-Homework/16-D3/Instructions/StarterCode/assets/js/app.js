@@ -1,26 +1,14 @@
 // @TODO: YOUR CODE HERE!
-// The code for the chart is wrapped inside a function
-// that automatically resizes the chart
-function makeResponsive() {
-
-    // // if the SVG area isn't empty when the browser loads, remove it
-    // // and replace it with a resized version of the chart
-    // var svgArea = d3.select("body").select("svg");
-    // if (!svgArea.empty()) {
-    //   svgArea.remove();
-    // }
   
-    var svgHeight = 500;
+    var svgHeight = 700;
     var svgWidth = 1000;
-    // // SVG wrapper dimensions are determined by the current width
-    // // and height of the browser window.
-    // var svgWidth = window.innerWidth;
-    // var svgHeight = window.innerHeight;
-  
+    // SVG wrapper dimensions are determined by the current width
+    // and height of the browser window.
+    
     var chartMargin = {
       top: 30,
       right: 50,
-      bottom: 80,
+      bottom: 30,
       left: 50
     };
   
@@ -37,17 +25,15 @@ function makeResponsive() {
   
     var chartGroup = svg.append("g")
 
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+      .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
       console.log(chartGroup)
 
       
     // Read CSV
-      d3.csv("data.csv").then(function(data){
+      d3.csv("assets/data/data.csv").then(function(data){
           // console.log(data);
 
-         // create date parser
-    // var dateParser = d3.timeParse("%d-%b");
 
         // parse data
           data.forEach(function(data) {
@@ -83,7 +69,7 @@ function makeResponsive() {
 
     // append circles
 
-    chartGroup.selectAll("scatter")
+    chartGroup.selectAll(".scatter")
     .data(data)
     .enter()
     .append("circle")
@@ -91,7 +77,7 @@ function makeResponsive() {
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", "13")
-    .attr("fill", "steelblue")
+    .attr("fill", "blue")
     .attr("opacity", 0.6);
     // .attr("stroke-width", "1")
     // .attr("stroke", "black");
@@ -99,18 +85,19 @@ function makeResponsive() {
     // CITED : LINE 1 TO 84 FROM LESSON-PLANS 16-D3, ACTIVITIES 3 SOLVED (7)
 
 
-      });
+      
     //   Add states label to the points
-    circlesGroup.selectAll("texts")
+    chartGroup.selectAll("texts")
     .data(data)
     .enter()
     .append("text") 
-    circleLabels
+    .text(function(d) {
+      return (d.abbr)
+    })
+    // circleLabels
     .attr("x", function(d) {return d.poverty;})
     .attr("y", function(d) {return d.healthcare;})
-    .text(function(d) {
-    return (d.abbr);
-    })
+  
     .attr("font-size", "8px")
     .attr("fill", "white");
 
@@ -129,10 +116,30 @@ chartGroup.append("text")
     .text("In Poverty (%)"); 
 
     // CITED FROM https://stackoverflow.com/questions/55988709/how-can-i-add-labels-inside-the-points-in-a-scatterplot
-  };
+  
 
-// When the browser loads, makeResponsive() is called.
-makeResponsive();
+  // Initialize tooltip
+    // Step 1: Append tooltip div
+    var toolTip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([90, -70])
+      .html(function(d) {
+        return  `${d.state}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}<br>`; 
+    })
+      // create tiiltip in chart
+      chartGroup.call(toolTip);
 
-// When the browser window is resized, makeResponsive() is called.
-d3.select(window).on("resize", makeResponsive);
+    // Step 2: Create "mouseover" event listener to display tooltip
+    chartGroup.on("mouseover", function(data) {
+      toolTip.show(data, this);
+    })
+          
+      // Step 3: Create "mouseout" event listener to hide tooltip
+      .on("mouseout", function(data, index) {
+        toolTip.hide(data);
+    //   }).catch(function(error) {
+    // console.log(error);
+  });
+// CITED TOOLTIP FROM LESSON-PLANS 16-D3, ACTIVITIES 3 UNSOLVED (7)
+      });
+
