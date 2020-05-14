@@ -1,3 +1,4 @@
+
 // @TODO: YOUR CODE HERE!
   
 var svgHeight = 700;
@@ -118,25 +119,27 @@ chartGroup.append("text")
 
 // Initialize tooltip
 // Step 1: Append tooltip div
-var toolTip = d3.tip()
-  .attr("class", "d3-tip")
-  .offset([90, -70])
-  .html(function(d) {
-    return  `${d.state}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}<br>`; 
-})
-  // create tiiltip in chart
-  chartGroup.call(toolTip);
+// Step 1: Append tooltip div
+var toolTip = d3.select("body")
+.append("div")
+.classed("tooltip", true);
 
 // Step 2: Create "mouseover" event listener to display tooltip
-chartGroup.on("mouseover", function(data) {
-  toolTip.show(data, this);
-})
+chartGroup.on("mouseover", function(d) {
+toolTip.style("display", "block")
+  .html(function(d) {
+    return  `${d.state}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}<br>`
+    .style("left", d3.event.pageX + "px")
+          .style("top", d3.event.pageY + "px");
+
+  })
       
   // Step 3: Create "mouseout" event listener to hide tooltip
-  .on("mouseout", function(data, index) {
-    toolTip.hide(data);
-//   }).catch(function(error) {
-// console.log(error);
+  .on("mouseout", function() {
+    toolTip.style("display", "none");
+  }).catch(function(error) {
+console.log(error);
 });
-// CITED TOOLTIP FROM LESSON-PLANS 16-D3, ACTIVITIES 3 UNSOLVED (7)
-  });
+// CITED TOOLTIP FROM LESSON-PLANS 16-D3, ACTIVITIES 3 SOLVED(7)
+});
+  })
